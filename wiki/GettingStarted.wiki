@@ -12,7 +12,7 @@ and in text format:  http://www.cpustick.com/text.htm
 How to use the CUI32 {{{BootLoader}}}
 
 
-The CUI32 ships with a custom version of Microchip's HID BootLoader installed. When your CUI32 is turned on or reset, it first starts running the bootloader code, which checks to see if it should wait for an upload of new firmware from the host computer, or skip immediately to running the StickOS (or whatever firmware you have installed).  There are three things the BootLoader checks for - if any one of these is true then it will enter the bootloader:
+The CUI32 ships with a custom version of Microchip's HID _BootLoader_ installed. When your CUI32 is turned on or reset, it first starts running the bootloader code, which checks to see if it should wait for an upload of new firmware from the host computer, or skip immediately to running the StickOS (or whatever firmware you have installed).  There are three things the BootLoader checks for - if any one of these is true then it will enter the bootloader:
 
     * PROG button held down during powerup (this is the *normal method* - you can hold the PROG down while pushing RESET, just make sure to let go of the PROG button last)
     * FLASH memory other than the BootLoader is blank (it was erased somehow)
