@@ -12,10 +12,10 @@ and in text format:  http://www.cpustick.com/text.htm
 How to use the CUI32 {{{BootLoader}}}
 
 
-The CUI32 ships with a custom version of Microchip's HID _BootLoader_ installed. When your CUI32 is turned on or reset, it first starts running the bootloader code, which checks to see if it should wait for an upload of new firmware from the host computer, or skip immediately to running the StickOS (or whatever firmware you have installed).  There are three things the BootLoader checks for - if any one of these is true then it will enter the bootloader:
+The CUI32 ships with a custom version of Microchip's HID {{{BootLoader}}} installed. When your CUI32 is turned on or reset, it first starts running the {{{BootLoader}}} code, which checks to see if it should wait for an upload of new firmware from the host computer, or skip immediately to running the StickOS (or whatever firmware you have installed).  There are three things the {{{BootLoader}}} checks for - if any one of these is true then it will enter the {{{BootLoader}}}:
 
     * PROG button held down during powerup (this is the *normal method* - you can hold the PROG down while pushing RESET, just make sure to let go of the PROG button last)
-    * FLASH memory other than the BootLoader is blank (it was erased somehow)
+    * FLASH memory other than the {{{BootLoader}}} is blank (it was erased somehow)
     * Software Key has correct value (a host computer could set this flag and then issue a soft-reset command to allow firmware updates without needing to push a button)
 
-The windows program for uploading new firmware to the CUI32 is the Microchip HID Bootloader application - this comes with Microchip's USB framework ( http://www.microchip.com/usb/ ), or you can directly download v2.6 of this program here:
+The windows program for uploading new firmware to the CUI32 is the Microchip HID {{{Bootloader}}} application - this comes with Microchip's USB framework ( http://www.microchip.com/usb/ ), or you can directly download v2.6 of this program here:
