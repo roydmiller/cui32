@@ -22,7 +22,7 @@ If any of these are true, the CUI32 will jump into {{{BootLoader}}} mode (and th
 
 http://cui32.googlecode.com/files/MicrochipHIDBootLoader_2.6.zip
 
-Once you have your CUI32 in the {{{BootLoader}}} mode, you run this program on your PC, and then you can send the new .HEX file you want to use down to the CUI32. Once you're done programming, you can either reset the CUI32 by pressing and releasing the RESET button, or manually by removing power (unplugging the USB cable) and rebooting the board.  The CUI32 will then run the new firmware you just programmed until you re-program it via this procedure again.
+Once you have your CUI32 in the {{{BootLoader}}} mode, you run this program on your PC, and then you can send the new .HEX file you want to use down to the CUI32. Once you're done programming, you can either reset the CUI32 by pressing and releasing the RESET button, or manually by removing power (unplugging the USB cable) and rebooting the board.  The CUI32 will then run the new firmware you just programmed (until you re-program it via this procedure again).
 
 There are instructions for how to do this on OS X or Linux here (the only difference is the host program on your computer used to communicate with the CUI32 is a command-line utility called "ubw32"):
 http://www.paintyourdragon.com/uc/ubw32/index.html
