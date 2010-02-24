@@ -18,6 +18,8 @@ http://www.phidgets.com/products.php?category=1
 These types of things allow very simple plugging in of sensors and actuators, no soldering needed for reconfiguring prototypes, etc.
 
 
+
+
 = Details =
 
 For advanced users - How to use the CUI32 {{{BootLoader}}}
