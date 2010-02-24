@@ -10,8 +10,7 @@ For those interested in using the CUI32 in a classroom or other prototyping cont
 
   * Electronic Bricks (various sensors, sound in/out, relays, etc.): http://www.seeedstudio.com/depot/electronic-brick-c-48.html
     * All the 3-pin devices should work fine - just use the [http://www.seeedstudio.com/depot/electronic-brick-half-buckled-3-wire-cable-p-488.html?cPath=48_57 Half buckled 3-wire cable]
-  * Phidgets analog sensors:
-http://www.phidgets.com/products.php?category=1
+  * Phidgets analog sensors: http://www.phidgets.com/products.php?category=1
     * You may need to trim some plastic off their included cables, and you should make sure the sensors can work on 3.3V (most can)...
 
 
