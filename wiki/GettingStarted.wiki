@@ -3,18 +3,15 @@
 = Introduction =
 
 If you are new to the CUI32, please see the following...
- * Getting started with StickOS:
- * http://www.cpustick.com/examples.htm and in text format:  http://www.cpustick.com/text.htm
+ * Getting started with StickOS: http://www.cpustick.com/examples.htm and in text format:  http://www.cpustick.com/text.htm
  * Other examples will be posted in the downloads and source repositories on this website.
 
 For those interested in using the CUI32 in a classroom or other prototyping context requiring the board to be re-usable for multiple projects, please note that if you put standard 0.1" male headers on the board, then most of Seeed Studio's "Electronic Brick" modules will plug right into the CUI32's analog pin triplets, as will Phidgets analog sensors - these both use pinouts that are compatible with the CUI32.
 
-* Electronic Bricks (various sensors, sound in/out, relays, etc.): http://www.seeedstudio.com/depot/electronic-brick-c-48.html
-  # All the 3-pin devices should work fine - just use the "Half buckled 3-wire cable:
+* Electronic Bricks (various sensors, sound in/out, relays, etc.): http://www.seeedstudio.com/depot/electronic-brick-c-48.html  All the 3-pin devices should work fine - just use the "Half buckled 3-wire cable:
 http://www.seeedstudio.com/depot/electronic-brick-half-buckled-3-wire-cable-p-488.html?cPath=48_57
 * Phidgets analog sensors (you may need to trim some plastic off their included cables):
-http://www.phidgets.com/products.php?category=1
- # Make sure the sensors can work on 3.3V (most can)... These types of things allow very simple plugging in of sensors and actuators, no soldering needed for reconfiguring prototypes, etc.
+http://www.phidgets.com/products.php?category=1  Make sure the sensors can work on 3.3V (most can)... These types of things allow very simple plugging in of sensors and actuators, no soldering needed for reconfiguring prototypes, etc.
 
 
 = Details =
