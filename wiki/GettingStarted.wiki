@@ -3,6 +3,7 @@
 = Introduction =
 
 If you are new to the CUI32, please see the following...
+ * StickOS BASIC User's Guid:  http://www.cpustick.com/stickos.htm
  * Getting started with StickOS: http://www.cpustick.com/examples.htm and in text format:  http://www.cpustick.com/text.htm
  * Other examples will be posted in the downloads and source repositories on this website - feel free to contribute your own!
 
