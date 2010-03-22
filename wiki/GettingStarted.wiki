@@ -16,7 +16,7 @@ For those interested in using the CUI32 in a classroom or other prototyping cont
     * You may need to trim some plastic off their included cables, and you should make sure the sensors can work on 3.3V (most can).
 
 
-These types of things allow very simple plugging in of sensors and actuators, no soldering needed for reconfiguring prototypes, etc.
+These types of things allow very simple plugging in of sensors and actuators, no soldering needed for reconfiguring prototypes, etc.  Note that you have to connect either 3.3V or 5V to all of the "V+" pins (the middle pins of each of the analog input pin triplets) by using a jumper or small piece of wire on the V+ selector (located next to the footprint for the USB host connector).
 
 
 
