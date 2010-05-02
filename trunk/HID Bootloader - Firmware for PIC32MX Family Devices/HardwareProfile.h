@@ -3,7 +3,7 @@
  Dependencies:	See INCLUDES section
  Processor:		PIC18 or PIC24 USB Microcontrollers
  Hardware:		The code is natively intended to be used on the following
- 				hardware platforms: PICDEM™ FS USB Demo Board, 
+ 				hardware platforms: PICDEM™ FS USB Demo Board,
  				PIC18F87J50 FS USB Plug-In Module, or
  				Explorer 16 + PIC24 USB PIM.  The firmware may be
  				modified for use on other USB platforms by editing this
@@ -46,6 +46,7 @@
 #define HARDWARE_PROFILE_H
 
 //#define DEMO_BOARD USER_DEFINED_BOARD
+#include "HardwareProfileCUI32.h"
 
 #if !defined(DEMO_BOARD)
     #if defined(__C32__)
