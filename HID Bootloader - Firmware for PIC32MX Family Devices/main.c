@@ -3,7 +3,7 @@
  Dependencies: See INCLUDES section
  Processor:		PIC32MX USB Microcontrollers
  Hardware:		The code is natively intended to be used on the following
- 				hardware platforms: 
+ 				hardware platforms:
  				Explorer 16 + PIC32MX460F512L PIM.  The firmware may be
  				modified for use on other USB platforms by editing the
  				HardwareProfile.h file.
@@ -39,7 +39,7 @@
   ----- ---------------------------------------------
   v2.2  Adapted from PIC18F87J50 HID Bootloader Firmware
         as basis for BootApplication().  The rest of the
-        code was taken from the Simple HID Demo in 
+        code was taken from the Simple HID Demo in
         MCHPFSUSB v2.2.
 
   vx.x  Fixed race condition where an OUT packet could potentially
@@ -81,6 +81,28 @@
     #pragma config PWP      = OFF           // Program Flash Write Protect
     #pragma config ICESEL   = ICS_PGx2      // ICE/ICD Comm Channel Select
     #pragma config DEBUG    = ON            // Background Debugger Enable
+#elif defined(CUI32)
+    #pragma config UPLLEN   = ON            // USB PLL Enabled
+    #pragma config FPLLMUL  = MUL_20        // PLL Multiplier
+    #pragma config UPLLIDIV = DIV_2         // USB PLL Input Divider
+    #pragma config FPLLIDIV = DIV_2         // PLL Input Divider
+    #pragma config FPLLODIV = DIV_1         // PLL Output Divider
+    #pragma config FPBDIV   = DIV_1         // Peripheral Clock divisor
+    #pragma config FWDTEN   = OFF           // Watchdog Timer
+    #pragma config WDTPS    = PS1           // Watchdog Timer Postscale
+    #pragma config FCKSM    = CSDCMD        // Clock Switching & Fail Safe Clock Monitor
+    #pragma config OSCIOFNC = OFF           // CLKO Enable
+    #pragma config POSCMOD  = HS            // Primary Oscillator
+    #pragma config IESO     = OFF           // Internal/External Switch-over
+    #pragma config FSOSCEN  = OFF           // Secondary Oscillator Enable (KLO was off)
+    #pragma config FNOSC    = PRIPLL        // Oscillator Selection
+    #pragma config CP       = OFF           // Code Protect
+    #pragma config BWP      = ON            // Boot Flash Write Protect
+    #pragma config PWP      = OFF           // Program Flash Write Protect
+    #pragma config ICESEL   = ICS_PGx2      // ICE/ICD Comm Channel Select
+    #pragma config DEBUG    = OFF           // Background Debugger Enable
+#else
+    #error Configuration bits not set.
 #endif
 
 /** C O N S T A N T S **********************************************************/
@@ -111,7 +133,7 @@
 #define UNLOCKCONFIG				    0x00	//Sub-command for the ERASE_DEVICE command
 #define LOCKCONFIG					    0x01	//Sub-command for the ERASE_DEVICE command
 
-//Query Device Response "Types" 
+//Query Device Response "Types"
 #define	TypeProgramMemory			    0x01    //When the host sends a QUERY_DEVICE command, need to respond by populating a list of valid memory regions that exist in the device (and should be programmed)
 #define TypeEEPROM					    0x02
 #define TypeConfigWords				    0x03
@@ -130,7 +152,7 @@
 
 #define	TotalPacketSize				    0x40
 #define WORDSIZE				    	0x04    //PIC18 uses 2 byte instruction words, PIC24 uses 3 byte "instruction words" (which take 2 addresses, since each address is for a 16 bit word; the upper word contains a "phantom" byte which is unimplemented.).
-#define RequestDataBlockSize 	        56  	//Number of bytes in the "Data" field of a standard request to/from the PC.  Must be an even number from 2 to 56. 
+#define RequestDataBlockSize 	        56  	//Number of bytes in the "Data" field of a standard request to/from the PC.  Must be an even number from 2 to 56.
 #define BufferSize 				        0x20    //32 16-bit words of buffer
 
 /** PRIVATE PROTOTYPES *********************************************/
@@ -156,7 +178,7 @@ DWORD ReadProgramMemory(DWORD);
 typedef union __attribute__ ((packed)) _USB_HID_BOOTLOADER_COMMAND
 {
 		unsigned char Contents[64];
-		
+
 		struct __attribute__ ((packed)) {
 			unsigned char Command;
 			WORD AddressHigh;
@@ -165,15 +187,15 @@ typedef union __attribute__ ((packed)) _USB_HID_BOOTLOADER_COMMAND
 			unsigned char PadBytes[(TotalPacketSize - 6) - (RequestDataBlockSize)];
 			unsigned int Data[RequestDataBlockSize/WORDSIZE];
 		};
-		
+
 			struct __attribute__ ((packed)) {
 			unsigned char Command;
 			DWORD Address;
 			unsigned char Size;
-			unsigned char PadBytes[(TotalPacketSize - 6) - (RequestDataBlockSize)];	
+			unsigned char PadBytes[(TotalPacketSize - 6) - (RequestDataBlockSize)];
 			unsigned int Data[RequestDataBlockSize/WORDSIZE];
 		};
-		
+
 		struct __attribute__ ((packed)){
 			unsigned char Command;
 			unsigned char PacketDataFieldSize;
@@ -186,17 +208,17 @@ typedef union __attribute__ ((packed)) _USB_HID_BOOTLOADER_COMMAND
 			unsigned long Length2;
 			unsigned char Type3;		//End of sections list indicator goes here, when not programming the vectors, in that case fill with 0xFF.
 			unsigned long Address3;
-			unsigned long Length3;			
+			unsigned long Length3;
 			unsigned char Type4;		//End of sections list indicator goes here, fill with 0xFF.
 			unsigned char ExtraPadBytes[33];
 		};
-		
+
 		struct __attribute__ ((packed)){						//For lock/unlock config command
 			unsigned char Command;
 			unsigned char LockValue;
 		};
-} PacketToFromPC;		
-	
+} PacketToFromPC;
+
 /** VARIABLES ******************************************************/
 #pragma udata
 
@@ -243,7 +265,7 @@ void main(void)
 #else
 int main(void)
 #endif
-{   
+{
     mInitSwitch2();
         if(sw2==1)
         {
@@ -253,7 +275,7 @@ int main(void)
         }
 
     InitializeSystem();
-	LATA = 0x0000;
+	//LATA = 0x0000;
     #if defined(USB_INTERRUPT)
         USBDeviceAttach();
     #endif
@@ -264,22 +286,22 @@ int main(void)
 		// Check bus status and service USB interrupts.
         USBDeviceTasks(); // Interrupt or polling method.  If using polling, must call
         				  // this function periodically.  This function will take care
-        				  // of processing and responding to SETUP transactions 
+        				  // of processing and responding to SETUP transactions
         				  // (such as during the enumeration process when you first
         				  // plug in).  USB hosts require that USB devices should accept
         				  // and process SETUP packets in a timely fashion.  Therefore,
-        				  // when using polling, this function should be called 
+        				  // when using polling, this function should be called
         				  // frequently (such as once about every 100 microseconds) at any
         				  // time that a SETUP packet might reasonably be expected to
         				  // be sent by the host to your device.  In most cases, the
         				  // USBDeviceTasks() function does not take very long to
         				  // execute (~50 instruction cycles) before it returns.
         #endif
-    				  
+
 
 		// Application-specific tasks.
 		// Application related code may be added here, or in the ProcessIO() function.
-        ProcessIO();        
+        ProcessIO();
     }//end while
 }//end main
 
@@ -299,12 +321,12 @@ int main(void)
  *                  are called from here.
  *
  *                  User application initialization routine should
- *                  also be called from here.                  
+ *                  also be called from here.
  *
  * Note:            None
  *******************************************************************/
 static void InitializeSystem(void)
-{   
+{
 //	The USB specifications require that USB peripheral devices must never source
 //	current onto the Vbus pin.  Additionally, USB peripherals should not source
 //	current on D+ or D- when the host/hub is not actively powering the Vbus line.
@@ -321,11 +343,11 @@ static void InitializeSystem(void)
 //	host is not actively providing power on Vbus. Therefore, implementing this
 //	bus sense feature is optional.  This firmware can be made to use this bus
 //	sense feature by making sure "USE_USB_BUS_SENSE_IO" has been defined in the
-//	HardwareProfile.h file.    
+//	HardwareProfile.h file.
     #if defined(USE_USB_BUS_SENSE_IO)
     tris_usb_bus_sense = INPUT_PIN; // See HardwareProfile.h
     #endif
-    
+
 //	If the host PC sends a GetStatus (device) request, the firmware must respond
 //	and let the host know if the USB peripheral device is currently bus powered
 //	or self powered.  See chapter 9 in the official USB specifications for details
@@ -334,14 +356,14 @@ static void InitializeSystem(void)
 //	Instead, firmware should check if it is currently self or bus powered, and
 //	respond accordingly.  If the hardware has been configured like demonstrated
 //	on the PICDEM FS USB Demo Board, an I/O pin can be polled to determine the
-//	currently selected power source.  On the PICDEM FS USB Demo Board, "RA2" 
+//	currently selected power source.  On the PICDEM FS USB Demo Board, "RA2"
 //	is used for	this purpose.  If using this feature, make sure "USE_SELF_POWER_SENSE_IO"
 //	has been defined in HardwareProfile.h, and that an appropriate I/O pin has been mapped
 //	to it in HardwareProfile.h.
     #if defined(USE_SELF_POWER_SENSE_IO)
     tris_self_power = INPUT_PIN;	// See HardwareProfile.h
     #endif
-    
+
     USBDeviceInit();	//usb_device.c.  Initializes USB module SFRs and firmware
     					//variables to known states.
     UserInit();
@@ -352,10 +374,10 @@ void UserInit(void)
 {
     //Initialize all of the LED pins
     mInitAllLEDs();
-    
+
     //Initialize all of the push buttons
     mInitAllSwitches();
-    
+
     //initialize the variable holding the handle for the last
     // transmission
     USBOutHandle = 0;
@@ -368,7 +390,7 @@ void UserInit(void)
 	ProgramMemStopAddress = ProgramMemStopNoConfigs;
 	ConfigsProtected = LOCKCONFIG;					//Assume we will not erase or program the vector table at first.  Must receive unlock config bits/vectors command first.
 	BootState = IdleState;
-	ProgrammedPointer = InvalidAddress;	
+	ProgrammedPointer = InvalidAddress;
 	BufferedDataIndex = 0;
 }//end UserInit
 
@@ -391,7 +413,7 @@ void UserInit(void)
  * Note:            None
  *******************************************************************/
 void ProcessIO(void)
-{   
+{
     //Blink the LEDs according to the USB device status
     if(blinkStatusValid)
     {
@@ -400,9 +422,9 @@ void ProcessIO(void)
 
     // User Application USB tasks
     if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) return;
-    
+
     BootApplication();
-    
+
 }//end ProcessIO
 
 
@@ -417,7 +439,7 @@ void ProcessIO(void)
  *
  * Side Effects:    None
  *
- * Overview:        BlinkUSBStatus turns on and off LEDs 
+ * Overview:        BlinkUSBStatus turns on and off LEDs
  *                  corresponding to the USB device state.
  *
  * Note:            mLED macros can be found in HardwareProfile.h
@@ -427,7 +449,7 @@ void ProcessIO(void)
 void BlinkUSBStatus(void)
 {
     static WORD led_count=0;
-    
+
     if(led_count == 0)led_count = 10000U;
     led_count--;
 
@@ -441,33 +463,33 @@ void BlinkUSBStatus(void)
         if(led_count==0)
         {
             mLED_1_Toggle();
-            mLED_2 = mLED_1;        // Both blink at the same time
+            //mLED_2 = mLED_1;        // Both blink at the same time
         }//end if
     }
     else
     {
         if(USBDeviceState == DETACHED_STATE)
         {
-            mLED_Both_Off();
+            //mLED_Both_Off();
         }
         else if(USBDeviceState == ATTACHED_STATE)
         {
-            mLED_Both_On();
+            //mLED_Both_On();
         }
         else if(USBDeviceState == POWERED_STATE)
         {
-            mLED_Only_1_On();
+            //mLED_Only_1_On();
         }
         else if(USBDeviceState == DEFAULT_STATE)
         {
-            mLED_Only_2_On();
+            //mLED_Only_2_On();
         }
         else if(USBDeviceState == ADDRESS_STATE)
         {
             if(led_count == 0)
             {
                 mLED_1_Toggle();
-                mLED_2_Off();
+                //mLED_2_Off();
             }//end if
         }
         else if(USBDeviceState == CONFIGURED_STATE)
@@ -475,7 +497,7 @@ void BlinkUSBStatus(void)
             if(led_count==0)
             {
                 mLED_1_Toggle();
-                mLED_2 = !mLED_1;       // Alternate blink                
+                //mLED_2 = !mLED_1;       // Alternate blink
             }//end if
         }//end if(...)
     }//end if(UCONbits.SUSPND...)
@@ -508,7 +530,7 @@ void BootApplication(void)
 
     if(BootState == IdleState)
     {
-        //Are we done sending the last response.  We need to be before we 
+        //Are we done sending the last response.  We need to be before we
         //  receive the next command because we clear the PacketToPC buffer
         //  once we receive a command
         if(!USBHandleBusy(USBInHandle))
@@ -519,27 +541,27 @@ void BootApplication(void)
                 {
                     PacketFromPC.Contents[i] = PacketFromPCBuffer.Contents[i];
                 }
-                
+
                 USBOutHandle = USBRxOnePacket(HID_EP,(BYTE*)&PacketFromPCBuffer,64);
                 BootState = NotIdleState;
-                
-                //Prepare the next packet we will send to the host, by initializing the entire packet to 0x00.	
+
+                //Prepare the next packet we will send to the host, by initializing the entire packet to 0x00.
                 for(i = 0; i < TotalPacketSize; i++)
                 {
                     //This saves code space, since we don't have to do it independently in the QUERY_DEVICE and GET_DATA cases.
-                    PacketToPC.Contents[i] = 0;	
+                    PacketToPC.Contents[i] = 0;
                 }
             }
         }
     }
 	else //(BootState must be in NotIdleState)
-	{	
+	{
 		switch(PacketFromPC.Command)
 		{
 			case QUERY_DEVICE:
 			{
 				//Prepare a response packet, which lets the PC software know about the memory ranges of this device.
-				
+
 				PacketToPC.Command = (unsigned char)QUERY_DEVICE;
 				PacketToPC.PacketDataFieldSize = (unsigned char)RequestDataBlockSize;
 				PacketToPC.DeviceFamily = (unsigned char)DEVICE_FAMILY;
@@ -547,9 +569,9 @@ void BootApplication(void)
                 PacketToPC.Type1 = (unsigned char)TypeProgramMemory;
                 PacketToPC.Address1 = (unsigned long)ProgramMemStart;
                 PacketToPC.Length1 = (unsigned long)(ProgramMemStopAddress - ProgramMemStart);	//Size of program memory area
-                PacketToPC.Type2 = (unsigned char)TypeEndOfTypeList;                
+                PacketToPC.Type2 = (unsigned char)TypeEndOfTypeList;
 
-//				if(ConfigsProtected == UNLOCKCONFIG)						
+//				if(ConfigsProtected == UNLOCKCONFIG)
 //				{
 //    				PacketToPC.Type2 = (unsigned char)TypeProgramMemory;				//Overwrite the 0xFF end of list indicator if we wish to program the Vectors.
 //                    PacketToPC.Address2 = (unsigned long)VectorsStart;
@@ -560,9 +582,9 @@ void BootApplication(void)
 //                    PacketToPC.Length3 = (unsigned long)(ConfigWordsStopAddress - ConfigWordsStartAddress);
 //                    PacketToPC.Type4 = (unsigned char)TypeEndOfTypeList;
 //				}
-				
+
 				//Init pad bytes to 0x00...  Already done after we received the QUERY_DEVICE command (just after calling HIDRxPacket()).
-	
+
                 if(!USBHandleBusy(USBInHandle))
 				{
                     USBInHandle = USBTxOnePacket(HID_EP,(BYTE*)&PacketToPC,64);
@@ -580,7 +602,7 @@ void BootApplication(void)
 				}
 				else	//LockValue must be == LOCKCONFIG
 				{
-					MaxPageToErase = MaxPageToEraseNoConfigs;		
+					MaxPageToErase = MaxPageToEraseNoConfigs;
 					ProgramMemStopAddress = ProgramMemStopNoConfigs;
 					ConfigsProtected = LOCKCONFIG;
 				}
@@ -591,22 +613,22 @@ void BootApplication(void)
 			{
         		void* pFlash = (void*)ProgramMemStart;
         		int temp;
-        		
+
         		for( temp = 0; temp < (MaxPageToErase); temp++ )
                 {
         			NVMErasePage( pFlash + (temp*FLASH_PAGE_SIZE) );
 					USBDeviceTasks(); 	//Call USBDriverService() periodically to prevent falling off the bus if any SETUP packets should happen to arrive.
                 }
-		
+
                 NVMCONbits.WREN = 0;		//Good practice to clear WREN bit anytime we are not expecting to do erase/write operations, further reducing probability of accidental activation.
-				BootState = IdleState;				
+				BootState = IdleState;
 			}
 				break;
 			case PROGRAM_DEVICE:
 			{
 				if(ProgrammedPointer == (unsigned long)InvalidAddress)
 					ProgrammedPointer = PacketFromPC.Address;
-				
+
 				if(ProgrammedPointer == (unsigned long)PacketFromPC.Address)
 				{
 					for(i = 0; i < (PacketFromPC.Size/WORDSIZE); i++)
@@ -642,7 +664,7 @@ void BootApplication(void)
 					PacketToPC.Command = GET_DATA;
 					PacketToPC.Address = PacketFromPC.Address;
 					PacketToPC.Size = PacketFromPC.Size;
-					
+
 					for(i = 0; i < (PacketFromPC.Size/WORDSIZE); i++)
 					{
                         DWORD* p;
@@ -657,13 +679,13 @@ void BootApplication(void)
                     USBInHandle = USBTxOnePacket(HID_EP,(BYTE*)&PacketToPC.Contents[0],64);
 					BootState = IdleState;
 				}
-				
+
 			}
 				break;
 			case RESET_DEVICE:
 			{
 				U1CON = 0x0000;				//Disable USB module
-				//And wait awhile for the USB cable capacitance to discharge down to disconnected (SE0) state. 
+				//And wait awhile for the USB cable capacitance to discharge down to disconnected (SE0) state.
 				//Otherwise host might not realize we disconnected/reconnected when we do the reset.
 				//A basic for() loop decrementing a 16 bit number would be simpler, but seems to take more code space for
 				//a given delay.  So do this instead:
@@ -686,25 +708,25 @@ void WriteFlashSubBlock(void)		//Use word writes to write code chunks less than 
 
     #if defined(__C30__)
     	DWORD_VAL Address;
-    
+
     	NVMCON = 0x4003;		//Perform WORD write next time WR gets set = 1.
-    
+
     	while(BufferedDataIndex > 0)		//While data is still in the buffer.
     	{
     		Address.Val = (ProgrammedPointer - BufferedDataIndex);
     		TBLPAG = Address.word.HW;
-    		
+
     		__builtin_tblwtl(Address.word.LW, ProgrammingBuffer[i]);		//Write the low word to the latch
     		__builtin_tblwth(Address.word.LW, ProgrammingBuffer[i + 1]);	//Write the high word to the latch (8 bits of data + 8 bits of "phantom data")
     		i = i + 2;
-    
+
     		asm("DISI #16");					//Disable interrupts for next few instructions for unlock sequence
     		__builtin_write_NVM();
             while(NVMCONbits.WR == 1){}
-    
+
     		BufferedDataIndex = BufferedDataIndex - 2;		//Used up 2 (16-bit) words from the buffer.
     	}
-    
+
     	NVMCONbits.WREN = 0;		//Good practice to clear WREN bit anytime we are not expecting to do erase/write operations, further reducing probability of accidental activation.
     #else
     	DWORD_VAL Address;
@@ -725,36 +747,36 @@ void WriteFlashSubBlock(void)		//Use word writes to write code chunks less than 
  *
  * PreCondition:    None
  *
- * Input:           Program memory address to read from.  Should be 
+ * Input:           Program memory address to read from.  Should be
  *                            an even number.
  *
- * Output:          Program word at the specified address.  For the 
- *                            PIC24, dsPIC, etc. which have a 24 bit program 
+ * Output:          Program word at the specified address.  For the
+ *                            PIC24, dsPIC, etc. which have a 24 bit program
  *                            word size, the upper byte is 0x00.
  *
  * Side Effects:    None
  *
- * Overview:        Modifies and restores TBLPAG.  Make sure that if 
- *                            using interrupts and the PSV feature of the CPU 
- *                            in an ISR that the TBLPAG register is preloaded 
- *                            with the correct value (rather than assuming 
+ * Overview:        Modifies and restores TBLPAG.  Make sure that if
+ *                            using interrupts and the PSV feature of the CPU
+ *                            in an ISR that the TBLPAG register is preloaded
+ *                            with the correct value (rather than assuming
  *                            TBLPAG is always pointing to the .const section.
  *
  * Note:            None
  ********************************************************************/
-DWORD ReadProgramMemory(DWORD address) 
-{  
+DWORD ReadProgramMemory(DWORD address)
+{
     #if defined(__C30__)
           DWORD_VAL dwvResult;
         WORD wTBLPAGSave;
-     
+
           wTBLPAGSave = TBLPAG;
         TBLPAG = ((DWORD_VAL*)&address)->w[1];
-    
+
         dwvResult.w[1] = __builtin_tblrdh((WORD)address);
         dwvResult.w[0] = __builtin_tblrdl((WORD)address);
         TBLPAG = wTBLPAGSave;
-     
+
           return dwvResult.Val;
     #else
     #endif
@@ -800,7 +822,7 @@ void USBCBSuspend(void)
 	//Example power saving code.  Insert appropriate code here for the desired
 	//application behavior.  If the microcontroller will be put to sleep, a
 	//process similar to that shown below may be used:
-	
+
 	//ConfigureIOPinsForLowPower();
 	//SaveStateOfAllInterruptEnableBits();
 	//DisableAllInterruptEnableBits();
@@ -809,10 +831,10 @@ void USBCBSuspend(void)
 	//RestoreStateOfAllPreviouslySavedInterruptEnableBits();	//Preferrably, this should be done in the USBCBWakeFromSuspend() function instead.
 	//RestoreIOPinsToNormal();									//Preferrably, this should be done in the USBCBWakeFromSuspend() function instead.
 
-	//IMPORTANT NOTE: Do not clear the USBActivityIF (ACTVIF) bit here.  This bit is 
-	//cleared inside the usb_device.c file.  Clearing USBActivityIF here will cause 
-	//things to not work as intended.	
-	
+	//IMPORTANT NOTE: Do not clear the USBActivityIF (ACTVIF) bit here.  This bit is
+	//cleared inside the usb_device.c file.  Clearing USBActivityIF here will cause
+	//things to not work as intended.
+
 
     #if defined(__C30__)
     #if 0
@@ -855,7 +877,7 @@ void __attribute__ ((interrupt)) _USB1Interrupt(void)
             IEC5bits.USB1IE = 0;
             U1OTGIEbits.ACTVIE = 0;
             IFS5bits.USB1IF = 0;
-        
+
             //USBClearInterruptFlag(USBActivityIFReg,USBActivityIFBitNum);
             USBClearInterruptFlag(USBIdleIFReg,USBIdleIFBitNum);
             //USBSuspendControl = 0;
@@ -879,8 +901,8 @@ void __attribute__ ((interrupt)) _USB1Interrupt(void)
  *					suspend mode (by "sending" 3+ms of idle).  Once in suspend
  *					mode, the host may wake the device back up by sending non-
  *					idle state signalling.
- *					
- *					This call back is invoked when a wakeup from USB suspend 
+ *
+ *					This call back is invoked when a wakeup from USB suspend
  *					is detected.
  *
  * Note:            None
@@ -890,7 +912,7 @@ void USBCBWakeFromSuspend(void)
 	// If clock switching or other power savings measures were taken when
 	// executing the USBCBSuspend() function, now would be a good time to
 	// switch back to normal full power run mode conditions.  The host allows
-	// a few milliseconds of wakeup time, after which the device must be 
+	// a few milliseconds of wakeup time, after which the device must be
 	// fully back to normal, and capable of receiving and processing USB
 	// packets.  In order to do this, the USB module must receive proper
 	// clocking (IE: 48MHz clock must be available to SIE for full speed USB
@@ -955,7 +977,7 @@ void USBCBErrorHandler(void)
 	// data loss occurs.  The system will typically recover
 	// automatically, without the need for application firmware
 	// intervention.
-	
+
 	// Nevertheless, this callback function is provided, such as
 	// for debugging purposes.
 }
@@ -982,9 +1004,9 @@ void USBCBErrorHandler(void)
  *					that is being implemented.  For example, a HID
  *					class device needs to be able to respond to
  *					"GET REPORT" type of requests.  This
- *					is not a standard USB chapter 9 request, and 
+ *					is not a standard USB chapter 9 request, and
  *					therefore not handled by usb_device.c.  Instead
- *					this request should be handled by class specific 
+ *					this request should be handled by class specific
  *					firmware, such as that contained in usb_function_hid.c.
  *
  * Note:            None
@@ -1033,9 +1055,9 @@ void USBCBStdSetDscHandler(void)
  *
  * Overview:        This function is called when the device becomes
  *                  initialized, which occurs after the host sends a
- * 					SET_CONFIGURATION (wValue not = 0) request.  This 
- *					callback function should initialize the endpoints 
- *					for the device's usage according to the current 
+ * 					SET_CONFIGURATION (wValue not = 0) request.  This
+ *					callback function should initialize the endpoints
+ *					for the device's usage according to the current
  *					configuration.
  *
  * Note:            None
@@ -1068,22 +1090,22 @@ void USBCBInitEP(void)
  *					button on a remote control, it is nice that the
  *					IR receiver can detect this signalling, and then
  *					send a USB "command" to the PC to wake up.
- *					
+ *
  *					The USBCBSendResume() "callback" function is used
- *					to send this special USB signalling which wakes 
+ *					to send this special USB signalling which wakes
  *					up the PC.  This function may be called by
  *					application firmware to wake up the PC.  This
  *					function should only be called when:
- *					
+ *
  *					1.  The USB driver used on the host PC supports
  *						the remote wakeup capability.
  *					2.  The USB configuration descriptor indicates
  *						the device is remote wakeup capable in the
  *						bmAttributes field.
  *					3.  The USB host PC is currently sleeping,
- *						and has previously sent your device a SET 
+ *						and has previously sent your device a SET
  *						FEATURE setup packet which "armed" the
- *						remote wakeup capability.   
+ *						remote wakeup capability.
  *
  *					This callback should send a RESUME signal that
  *                  has the period of 1-15ms.
@@ -1092,7 +1114,7 @@ void USBCBInitEP(void)
  *                  -Primary clock
  *                  -Secondary clock ***** MAKE NOTES ABOUT THIS *******
  *                   > Can switch to primary first by calling USBCBWakeFromSuspend()
- 
+
  *                  The modifiable section in this routine should be changed
  *                  to meet the application needs. Current implementation
  *                  temporary blocks other functions from executing for a
@@ -1120,9 +1142,9 @@ void USBCBInitEP(void)
 void USBCBSendResume(void)
 {
     static WORD delay_count;
-    
+
     USBResumeControl = 1;                // Start RESUME signaling
-    
+
     delay_count = 1800U;                // Set RESUME line for 1-13 ms
     do
     {
@@ -1156,7 +1178,7 @@ BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size)
 {
     switch(event)
     {
-        case EVENT_CONFIGURED: 
+        case EVENT_CONFIGURED:
             USBCBInitEP();
             break;
         case EVENT_SET_DESCRIPTOR:
@@ -1182,8 +1204,8 @@ BOOL USER_USB_CALLBACK_EVENT_HANDLER(USB_EVENT event, void *pdata, WORD size)
             break;
         default:
             break;
-    }      
-    return TRUE; 
+    }
+    return TRUE;
 }
 
 
