@@ -271,7 +271,13 @@ int main(void)
         {
     	    void (*fptr)(void);
     	    fptr = (void (*)(void))BootMemStart;
-    	    fptr();
+    	    //fptr();
+    	    // If there IS no real program to execute, then fall through to the bootloader
+			if (*(int *)BootMemStart != 0xFFFFFFFF)
+			{
+				fptr();
+        		while(1);
+			}
         }
 
     InitializeSystem();
