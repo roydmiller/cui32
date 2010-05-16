@@ -190,14 +190,21 @@ int main(void)
             //See if the device is attached and in the right format
             if(FSInit())
             {
+                SearchRec sr;
+                int found = FindFirst( "*.*", ATTR_MASK, &sr );
+
                 //Opening a file in mode "w" will create the file if it doesn't
                 //  exist.  If the file does exist it will delete the old file
                 //  and create a new one that is blank.
                 myFile = FSfopen("test.txt","w");
 
                 //Write some data to the new file.
-                FSfwrite("This is a test.",1,15,myFile);
-
+                FSfwrite( "This is a test.\r\n", 1, 17, myFile );
+                while ( found == 0 ) {
+                    FSfwrite( sr.filename, 1, strlen( sr.filename ), myFile );
+                    FSfwrite( "\r\n", 1, 2, myFile );
+                    found = FindNext( &sr );
+                }
 
                 //Always make sure to close the file so that the data gets
                 //  written to the drive.
