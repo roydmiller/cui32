@@ -96,7 +96,7 @@
     #pragma config FPBDIV   = DIV_1         // Peripheral Clock divisor
     #pragma config FWDTEN   = OFF           // Watchdog Timer
     #pragma config WDTPS    = PS1           // Watchdog Timer Postscale
-    //#pragma config FCKSM    = CSDCMD        // Clock Switching & Fail Safe Clock Monitor
+    #pragma config FCKSM    = CSDCMD        // Clock Switching & Fail Safe Clock Monitor
     #pragma config OSCIOFNC = OFF           // CLKO Enable
     #pragma config POSCMOD  = HS            // Primary Oscillator
     #pragma config IESO     = OFF           // Internal/External Switch-over
@@ -106,7 +106,7 @@
     #pragma config BWP      = OFF           // Boot Flash Write Protect
     #pragma config PWP      = OFF           // Program Flash Write Protect
     #pragma config ICESEL   = ICS_PGx2      // ICE/ICD Comm Channel Select
-    #pragma config DEBUG    = ON            // Background Debugger Enable
+    #pragma config DEBUG    = OFF           // Background Debugger Enable
 
 #else
 
