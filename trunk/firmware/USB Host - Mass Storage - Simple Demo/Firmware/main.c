@@ -81,7 +81,7 @@
         _CONFIG3(WPFP_WPFP0 & SOSCSEL_SOSC & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)
         _CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_LPRC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_OFF)
     #elif defined(__PIC24FJ256GB106__)
-        _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & COE_OFF & FWDTEN_OFF & ICS_PGx2) 
+        _CONFIG1( JTAGEN_OFF & GCP_OFF & GWRP_OFF & COE_OFF & FWDTEN_OFF & ICS_PGx2)
         _CONFIG2( 0xF7FF & IESO_OFF & FCKSM_CSDCMD & OSCIOFNC_OFF & POSCMOD_HS & FNOSC_PRIPLL & PLLDIV_DIV3 & IOL1WAY_ON)
     #elif defined(__PIC24FJ256DA210__)
         _CONFIG1(FWDTEN_OFF & ICS_PGx2 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
@@ -124,14 +124,14 @@ int main(void)
     #if defined(__PIC32MX__)
         {
             int  value;
-    
+
             value = SYSTEMConfigWaitStatesAndPB( GetSystemClock() );
-    
+
             // Enable the cache for the best performance
             CheKseg0CacheOn();
-    
+
             INTEnableSystemMultiVectoredInt();
-    
+
             value = OSCCON;
             while (!(value & 0x00000020))
             {
@@ -157,6 +157,9 @@ int main(void)
     //Device switches over automatically to PLL output after PLL is locked and ready.
     #endif
 
+	LATE = 0xFFFE; TRISE = 0xFFFE;
+	LATEbits.LATE0 = 1;
+
     deviceAttached = FALSE;
 
     //Initialize the stack
@@ -181,6 +184,7 @@ int main(void)
         if(USBHostMSDSCSIMediaDetect())
         {
             deviceAttached = TRUE;
+            LATEbits.LATE0 = 0;
 
             //now a device is attached
             //See if the device is attached and in the right format
@@ -193,11 +197,12 @@ int main(void)
 
                 //Write some data to the new file.
                 FSfwrite("This is a test.",1,15,myFile);
-                
+
 
                 //Always make sure to close the file so that the data gets
                 //  written to the drive.
                 FSfclose(myFile);
+                LATEbits.LATE0 = 1;
 
                 //Just sit here until the device is removed.
                 while(deviceAttached == TRUE)
