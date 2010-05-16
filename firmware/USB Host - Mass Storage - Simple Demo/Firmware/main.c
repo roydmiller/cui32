@@ -89,7 +89,7 @@
     #endif
 #elif defined( __PIC32MX__ )
     #pragma config UPLLEN   = ON            // USB PLL Enabled
-    #pragma config FPLLMUL  = MUL_15        // PLL Multiplier
+    #pragma config FPLLMUL  = MUL_20        // PLL Multiplier
     #pragma config UPLLIDIV = DIV_2         // USB PLL Input Divider
     #pragma config FPLLIDIV = DIV_2         // PLL Input Divider
     #pragma config FPLLODIV = DIV_1         // PLL Output Divider
