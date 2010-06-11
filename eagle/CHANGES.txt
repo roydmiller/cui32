@@ -3,3 +3,4 @@ CUI32_v12 version currently sold by SparkFun
 CUI32_v13 added additional soldering pads for soldering the female USB connector on the top side
 CUI32_v14 replaced the PIC32MX440F512H by the top-of-the-line PIC32MX795F512H
 CUI32_v15 reversed the order of the ICSP header pins
+CUI32_v16 added additional power supply header pins
