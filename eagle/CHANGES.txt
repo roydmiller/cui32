@@ -5,3 +5,6 @@ CUI32_v14 replaced the PIC32MX440F512H by the top-of-the-line PIC32MX795F512H
 CUI32_v15 reversed the order of the ICSP header pins
 CUI32_v16 added additional power supply header pins
 CUI32_v17 put all RDx pins in consecutive order
+
+ZigFlea_v6
+ZigFlea_v7 Added new 3.3V, GND and RD8 headerpins to make it compatible with CUI32_v17
