@@ -34,7 +34,7 @@ The CUI32 ships with a custom version of Microchip's HID {{{BootLoader}}} instal
 
 If any of these are true, the CUI32 will jump into {{{BootLoader}}} mode (and the STATUS LED will start flashing much quicker than StickOS' "heartbeat"). If none of them are true, then it jumps to the beginning of your normal firmware (StickOS or whatever), and starts executing it.  In {{{BootLoader}}} mode, the CUI32 will talk to your computer as a generic HID device - this means you do not need to install any drivers on the PC side.  The windows program for uploading new firmware to the CUI32 is the Microchip HID {{{Bootloader}}} application - this comes with Microchip's USB framework ( http://www.microchip.com/usb/ ), or you can directly download v2.6 of this program here:
 
-http://cui32.googlecode.com/files/MicrochipHIDBootLoader_2.6.zip
+http://code.google.com/p/cui32/downloads/detail?name=MicrochipHIDBootLoader2.6a.zip
 
 Once you have your CUI32 in the {{{BootLoader}}} mode, you run this program on your PC, and then you can send the new .HEX file you want to use down to the CUI32. Once you're done programming, you can either reset the CUI32 by pressing and releasing the RESET button, or manually by removing power (unplugging the USB cable) and rebooting the board.  The CUI32 will then run the new firmware you just programmed (until you re-program it via this procedure again).
 
